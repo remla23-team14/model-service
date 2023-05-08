@@ -11,6 +11,8 @@ COPY ml/ /root/ml
 # TODO Change this to retrieve the model from somewhere else.
 COPY model-training/c1_BoW_Sentiment_Model.pkl /root/
 COPY model-training/c2_Classifier_Sentiment_Model /root/
+COPY model-training/requirements.txt /root/
+RUN pip install -r model-training/requirements.txt
 
 ENTRYPOINT ["python"]
 CMD ["app.py"]

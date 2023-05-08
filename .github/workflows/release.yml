@@ -11,6 +11,7 @@ jobs:
         with:
           lfs: true
       - name: Checkout ML models
+        uses: actions/checkout@v3
         with:
           repository: remla23-team14/model-training
           path: ./model-training
