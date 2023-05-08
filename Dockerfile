@@ -4,8 +4,7 @@ FROM python:3.7-slim
 WORKDIR /root
 COPY requirements.txt /root/
 
-COPY src/app.py /root/
-COPY src/ml/ /root/ml
+COPY src/ /root/src
 
 # When building locally make sure to pull git@github.com:remla23-team14/model-training.git to a folder 'model-training'.
 COPY model-training/c1_BoW_Sentiment_Model.pkl /root/
