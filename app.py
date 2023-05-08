@@ -1,6 +1,7 @@
 from flasgger import Swagger
-from flask import Flask, request
+from flask import Flask, request, json
 from ml.api.predictor import Predictor
+
 
 app = Flask(__name__)
 swagger = Swagger(app)
@@ -32,7 +33,7 @@ def predict():
     msg = request.get_json().get('msg')
     return {
         "message": "Message was: " + msg,
-        "result": predictor.review_classification(msg)
+        "result": json.dumps(predictor.is_review_positive(msg))
     }
 
 app.run(host="0.0.0.0", port=8080, debug=True)
