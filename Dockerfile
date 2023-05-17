@@ -1,6 +1,7 @@
 # Dockerfile
 # Starts a flask webservice to expose the ML model
 FROM python:3.7-slim
+ENV PORT="8080"
 WORKDIR /root
 COPY requirements.txt /root/
 

@@ -1,7 +1,11 @@
+import os
+
 from flasgger import Swagger
 from flask import Flask, request, json, Response
 from ml.api.predictor import Predictor
+from dotenv import load_dotenv
 
+load_dotenv()
 app = Flask(__name__)
 swagger = Swagger(app)
 predictor = Predictor('c1_BoW_Sentiment_Model.pkl', 'c2_Classifier_Sentiment_Model', 'test_acc.txt')
@@ -45,4 +49,4 @@ def metrics():
     return Response(m, mimetype="text/plain")
 
 
-app.run(host="0.0.0.0", port=8080, debug=True)
+app.run(host="0.0.0.0", port=os.getenv('PORT', 8080), debug=True)
