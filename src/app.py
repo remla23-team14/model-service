@@ -1,11 +1,11 @@
 from flasgger import Swagger
-from flask import Flask, request, json
+from flask import Flask, request, json, Response
 from ml.api.predictor import Predictor
-
 
 app = Flask(__name__)
 swagger = Swagger(app)
-predictor = Predictor('c1_BoW_Sentiment_Model.pkl', 'c2_Classifier_Sentiment_Model')
+predictor = Predictor('c1_BoW_Sentiment_Model.pkl', 'c2_Classifier_Sentiment_Model', 'test_acc.txt')
+
 
 @app.route('/', methods=['POST'])
 def predict():
@@ -35,5 +35,14 @@ def predict():
         "message": "Message was: " + msg,
         "result": json.dumps(predictor.is_review_positive(msg))
     }
+
+
+@app.route('/metrics', methods=['GET'])
+def metrics():
+    m = "# HELP training_accuracy Provides the training accuracy of the prediction model.\n"
+    m += "# TYPE training_accuracy gauge\n"
+    m += f"training_accuracy{{}} {predictor.get_training_score()}\n"
+    return Response(m, mimetype="text/plain")
+
 
 app.run(host="0.0.0.0", port=8080, debug=True)
