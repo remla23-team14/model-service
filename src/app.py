@@ -8,7 +8,9 @@ from dotenv import load_dotenv
 load_dotenv()
 app = Flask(__name__)
 swagger = Swagger(app)
-predictor = Predictor('c1_BoW_Sentiment_Model.pkl', 'c2_Classifier_Sentiment_Model', 'test_acc.txt')
+training_loc = 'model-training/'
+predictor = Predictor(training_loc+'c1_BoW_Sentiment_Model.pkl', training_loc+'c2_Classifier_Sentiment_Model',
+                      training_loc+'test_acc.txt')
 
 
 @app.route('/', methods=['POST'])

@@ -1,0 +1,3 @@
+[submodule "model-training"]
+	path = model-training
+	url = https://github.com/remla23-team14/model-training.git

@@ -8,13 +8,10 @@ jobs:
   build:
     runs-on: ubuntu-22.04
     steps:
-      - name: Checkout github repo
+      - name: Checkout repository
         uses: actions/checkout@v3
-      - name: Checkout ML models
-        uses: actions/checkout@v3
-        with:
-          repository: remla23-team14/model-training
-          path: ./model-training
+      - name: Checkout submodules
+        run: git submodule update --init --recursive
       - name: Set up QEMU
         id: qemu
         uses: docker/setup-qemu-action@v2
