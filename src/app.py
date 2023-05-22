@@ -13,33 +13,69 @@ predictor = Predictor(training_loc+'c1_BoW_Sentiment_Model.pkl', training_loc+'c
                       training_loc+'test_acc.txt')
 
 
-@app.route('/', methods=['POST'])
+@app.route('/predict', methods=['POST'])
 def predict():
     """
-    Make a hardcoded prediction
+    Make a prediction on the sentiment of a review based on a trained model.
     ---
     consumes:
       - application/json
     parameters:
         - name: input_data
           in: body
-          description: message to be classified.
+          description: Review to be classified.
           required: True
           schema:
             type: object
-            required: sms
+            required: review
             properties:
-                msg:
+                review:
                     type: string
-                    example: This is an example msg.
+                    example: We are glad we found this place.
     responses:
       200:
-        description: Some result
+        description: TODO
     """
-    msg = request.get_json().get('msg')
+    review = request.get_json().get('review')
     return {
-        "message": "Message was: " + msg,
-        "result": json.dumps(predictor.is_review_positive(msg))
+        "msg": "The given review was: " + review,
+        "sentiment": json.dumps(predictor.is_review_positive(review))
+    }
+
+
+@app.route('/toggle-sentiment', methods=['POST'])
+def toggle_sentiment():
+    """
+    A feedback endpoint to check if a previous prediction was incorrect.
+    ---
+    consumes:
+      - application/json
+    parameters:
+        - name: input_data
+          in: body
+          description: Sentiment of review to be updated.
+          required: True
+          schema:
+            type: object
+            required: review
+            properties:
+                review:
+                    type: string
+                    example: We are glad we found this place.
+                sentiment:
+                    type: boolean
+                    example: 'true'
+    responses:
+      200:
+        description: TODO
+    """
+    review = request.get_json().get('review')
+    sentiment = json.loads(request.get_json().get('sentiment'))
+    sentiment = predictor.update_prev_prediction(review, sentiment)
+    # TODO update accuracy,
+    return {
+        "msg": "The given review was: " + review,
+        "sentiment": json.dumps(sentiment)
     }
 
 
@@ -47,8 +83,10 @@ def predict():
 def metrics():
     m = "# HELP training_accuracy Provides the training accuracy of the prediction model.\n"
     m += "# TYPE training_accuracy gauge\n"
-    m += f"training_accuracy{{}} {predictor.get_training_score()}\n"
+    m += f"training_accuracy{{}} {predictor.training_score}\n"
+    m += f"deployment_accuracy{{}} {predictor.deployment_accuracy}\n"
     return Response(m, mimetype="text/plain")
 
 
-app.run(host="0.0.0.0", port=os.getenv('PORT', 8080), debug=True)
+if __name__ == '__main__':
+    app.run(host="0.0.0.0", port=os.getenv('PORT', 8080), debug=True)
