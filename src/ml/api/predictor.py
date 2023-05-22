@@ -3,7 +3,7 @@ import typing
 
 import joblib
 from sklearn.naive_bayes import GaussianNB
-from src.ml.api.prediction import Prediction
+from ml.api.prediction import Prediction
 
 
 class Predictor:
