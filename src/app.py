@@ -38,7 +38,7 @@ def predict():
     """
     review = request.get_json().get('review')
     return {
-        "msg": "The given review was: " + review,
+        "review": review,
         "sentiment": json.dumps(predictor.is_review_positive(review))
     }
 
@@ -74,7 +74,7 @@ def toggle_sentiment():
     sentiment = predictor.update_prev_prediction(review, sentiment)
     # TODO update accuracy,
     return {
-        "msg": "The given review was: " + review,
+        "review": review,
         "sentiment": json.dumps(sentiment)
     }
 
