@@ -84,7 +84,12 @@ def metrics():
     m = "# HELP training_accuracy Provides the training accuracy of the prediction model.\n"
     m += "# TYPE training_accuracy gauge\n"
     m += f"training_accuracy{{}} {predictor.training_score}\n"
+    m += "# HELP deployment_accuracy Provides the actual accuracy of the prediction model.\n"
+    m += "# TYPE deployment_accuracy gauge\n"
     m += f"deployment_accuracy{{}} {predictor.deployment_accuracy}\n"
+    m += "# HELP last_confidence_score Provides the confidence score of the most recently added review.\n"
+    m += "# TYPE last_confidence_score gauge\n"
+    m += f"last_confidence_score{{}} {predictor.last_confidence_score}\n"
     return Response(m, mimetype="text/plain")
 
 

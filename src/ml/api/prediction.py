@@ -1,8 +1,9 @@
 class Prediction:
 
-    def __init__(self, predicted_sentiment: bool, new_sentiment: bool = None):
+    def __init__(self, predicted_sentiment: bool, confidence_score: float, new_sentiment: bool = None):
         self._original_prediction = predicted_sentiment
         self._prediction = predicted_sentiment if new_sentiment is None else new_sentiment
+        self._confidence_score_predicted_value = confidence_score
 
     @property
     def prediction(self) -> bool:
@@ -15,3 +16,7 @@ class Prediction:
     @property
     def is_correct(self) -> bool:
         return self._original_prediction == self._prediction
+
+    @property
+    def confidence_score(self) -> float:
+        return self._confidence_score_predicted_value

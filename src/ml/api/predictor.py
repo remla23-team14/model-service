@@ -1,4 +1,6 @@
 import pickle
+import typing
+
 import joblib
 from sklearn.naive_bayes import GaussianNB
 from src.ml.api.prediction import Prediction
@@ -12,6 +14,7 @@ class Predictor:
         with open(test_file_name, 'r') as file:
             self._training_score = float(file.read())
         self._previous_predictions: dict[str, Prediction] = {}
+        self._last_prediction: typing.Optional[Prediction] = None
 
     def is_review_positive(self, review: str, given_sentiment: bool = None) -> bool:
         """Checks if a review is positive or negative.
@@ -29,7 +32,9 @@ class Predictor:
         else:
             processed_input = self._cv.transform([review]).toarray()[0]
             sentiment = bool(self._classifier.predict([processed_input])[0])
-            prediction = Prediction(sentiment, given_sentiment)
+            confidence_score = float((self._classifier.predict_proba([processed_input])[0]).max())
+            prediction = Prediction(sentiment, confidence_score, given_sentiment)
+            self._last_prediction = prediction
             self._previous_predictions.update({review: prediction})
         return prediction.prediction
 
@@ -53,4 +58,10 @@ class Predictor:
 
     @property
     def deployment_accuracy(self) -> float:
+        if not self._previous_predictions: return 0.0
         return [p.is_correct for p in self._previous_predictions.values()].count(True) / len(self._previous_predictions)
+
+    @property
+    def last_confidence_score(self) -> float:
+        if self._last_prediction is None: return 0.0
+        return self._last_prediction.confidence_score
