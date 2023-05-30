@@ -1,20 +1,31 @@
-import pickle
+import json
 import typing
 
 import joblib
+from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.naive_bayes import GaussianNB
 from ml.api.prediction import Prediction
 
 
 class Predictor:
 
-    def __init__(self, cf_file_name: str, classifier_filename: str, test_file_name: str):
-        self._cv = pickle.load(open(cf_file_name, "rb"))
-        self._classifier: GaussianNB = joblib.load(classifier_filename)
-        with open(test_file_name, 'r') as file:
-            self._training_score = float(file.read())
+    def __init__(self, preprocessor, model, corpus, metrics_file):
+        """A predictor object to predict the sentiment of reviews.
+
+        Args:
+            preprocessor (str, pathlib.Path, or file object):
+                The file object or path of the file from which to load the preprocessor as CountVectorizer.
+            model (str, pathlib.Path, or file object):
+                The file object or path of the file from which to load the classifier as GaussianNB.
+            metrics_file (file object): Of an JSON file containing the info for accuracy.train as a float.
+        """
+        self._preprocessor: CountVectorizer = joblib.load(preprocessor)
+        self._preprocessor.fit_transform(joblib.load(corpus))  # Not sure why this is needed.
+        self._classifier: GaussianNB = joblib.load(model)
+        self._training_score = float(json.load(metrics_file)["accuracy"]["train"])
         self._previous_predictions: dict[str, Prediction] = {}
         self._last_prediction: typing.Optional[Prediction] = None
+        print("Done initializing prediction model")
 
     def is_review_positive(self, review: str, given_sentiment: bool = None) -> bool:
         """Checks if a review is positive or negative.
@@ -30,7 +41,7 @@ class Predictor:
         if review in self._previous_predictions:
             return self._previous_predictions.get(review).prediction
         else:
-            processed_input = self._cv.transform([review]).toarray()[0]
+            processed_input = self._preprocessor.transform([review]).toarray()[0]
             sentiment = bool(self._classifier.predict([processed_input])[0])
             confidence_score = float((self._classifier.predict_proba([processed_input])[0]).max())
             prediction = Prediction(sentiment, confidence_score, given_sentiment)

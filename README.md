@@ -16,7 +16,7 @@ docker run --rm -it -p8080:8080 ghcr.io/remla23-team14/model-service:latest
 #### Start-up locally
 One can also start of the service locally by following these steps:
 1. Download python dependencies: `pip install -r requirements.txt`
-2. Make sure your submodules are up to date: `git pull --recurse-submodules`
+2. Rename the file `development.env` to `.env`.
 3. Run it by calling `python src/app.py`
 
 ### Service querying 
