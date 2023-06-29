@@ -26,3 +26,28 @@ You can then query the service **after starting it** to see if a review is posit
 * Using curl: `curl -X POST "http://127.0.0.1:8080/predict" -H  "accept: application/json" -H  
   "Content-Type: application/json" -d "{  \"review\": \"We are glad we found this place.\"}"`
 * Or performing POST on "http://localhost:8080/" with json body containing the msg.
+
+### Build the docker image
+You can also build the docker image yourself.
+
+Go to the root of this directory in terminal:
+```shell
+cd <path_to_model-service_root>
+```
+
+Build the docker image:
+```shell
+docker build . -t ghcr.io/remla23-team14/model-service:latest
+
+#Or if you want to give it your own name:
+docker build . -t <your_name>:<your_tag>
+```
+
+Then it can be run with:
+
+```sh
+docker run --rm -it -p8080:8080 ghcr.io/remla23-team14/model-service:latest
+
+#Or if you built it using your own name:
+docker run --rm -it -p8080:8080 <your_name>:<your_tag>
+```
