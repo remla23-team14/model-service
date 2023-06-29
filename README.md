@@ -22,7 +22,7 @@ One can also start of the service locally by following these steps:
 
 ### Service querying 
 You can then query the service **after starting it** to see if a review is positive or negative by either:
-* Going to [http://localhost:8080/apidocs]() and interacting with the swagger api.
+* Going to [http://localhost:8080/apidocs](http://localhost:8080/apidocs) and interacting with the swagger api.
 * Using curl: `curl -X POST "http://127.0.0.1:8080/predict" -H  "accept: application/json" -H  
   "Content-Type: application/json" -d "{  \"review\": \"We are glad we found this place.\"}"`
 * Or performing POST on "http://localhost:8080/" with json body containing the msg.
