@@ -6,3 +6,4 @@ flasgger==0.9.7.1
 python-dotenv==1.0.0
 dvc==2.58.1
 dvc-gdrive==2.19.2
+dvc-gs==2.22.1

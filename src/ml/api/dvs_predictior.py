@@ -8,11 +8,14 @@ from ml.api.predictor import Predictor
 class DVSPredictor(Predictor):
 
     def __init__(self):
+        """A prediction object made based on online DVC's models."""
         dotenv.load_dotenv()
+        print("Starting download of DVC files...")
         with self._download_dvc_file(os.getenv('DVC_PREPROCESSOR_PATH')) as preprocessor, \
                 self._download_dvc_file(os.getenv('DVC_MODEL_PATH')) as model, \
                 self._download_dvc_file(os.getenv('DVC_CORPUS_PATH')) as corpus, \
                 self._download_dvc_file(os.getenv('DVC_METRICS_PATH'), mode="r") as metrics:
+            print("Finished downloading DVC files.")
             super().__init__(preprocessor, model, corpus, metrics)
 
     @staticmethod
