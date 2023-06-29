@@ -51,3 +51,11 @@ docker run --rm -it -p8080:8080 ghcr.io/remla23-team14/model-service:latest
 #Or if you built it using your own name:
 docker run --rm -it -p8080:8080 <your_name>:<your_tag>
 ```
+
+If you don't want to use DVC for fetching the model, you can use your own model.
+Instructions for doing that are listed [here](https://github.com/remla23-team14/model-service/edit/main/model-training).
+You can then run the docker image with a volume mount:
+```sh
+docker run --rm -it -p8080:8080 <your_name>:<your_tag> -v ./model-training:/root/model-training
+```
+
